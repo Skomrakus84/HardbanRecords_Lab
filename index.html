@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HardbanRecords Lab - Music & Publishing Platform</title>
+    <meta name="description" content="Complete music distribution and digital publishing platform" />
+
+    <!-- Tailwind CSS -->
+    <link href="https://cdn.tailwindcss.com" rel="stylesheet" />
+
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+
+    <!-- Babel for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <!-- Recharts -->
+    <script src="https://unpkg.com/recharts@2.8.0/umd/Recharts.js"></script>
+
+    <style>
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      }
+      .loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="root">
+      <div class="loading">
+        <div class="text-2xl">🎵 Loading HardbanRecords Lab...</div>
+      </div>
+    </div>
+
+    <script type="text/babel" src="./hardban-records-lab.tsx"></script>
+
+    <script type="text/babel">
+      const { createElement } = React;
+      const { createRoot } = ReactDOM;
+
+      const root = createRoot(document.getElementById('root'));
+      root.render(createElement(HardbanRecordsLab));
+    </script>
+  </body>
+</html>

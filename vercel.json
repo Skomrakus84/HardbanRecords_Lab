@@ -1,0 +1,56 @@
+{
+  "version": 2,
+  "name": "hardbanrecords-lab",
+  "builds": [
+    {
+      "src": "hardban-records-lab.tsx",
+      "use": "@vercel/static-build",
+      "config": {
+        "buildCommand": "echo 'No build needed for single file React app'"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/hardban-records-lab.html"
+    }
+  ],
+  "env": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://lniyanikhipfmrdubqvm.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuaXlhbmlraGlwZm1yZHVicXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2ODMwMTksImV4cCI6MjA3MzI1OTAxOX0.eCv-tJQ-OT8FRmPYhNtJ1d8NWXBvq-XMQkH_ScsOZ0g",
+    "NEXT_PUBLIC_API_URL": "https://hardbanrecords-backend.onrender.com"
+  },
+  "functions": {
+    "hardban-records-lab.tsx": {
+      "includeFiles": "hardban-records-lab.tsx"
+    }
+  }
+}
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "X-XSS-Protection",
+          "value": "1; mode=block"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}
