@@ -1,5 +1,5 @@
 # Production Deployment Configuration
-# HardbanRecords Lab - Dual Service Architecture
+# HardbanRecords Lab - Full Stack Application
 
 services:
   # Backend API Gateway
@@ -9,7 +9,7 @@ services:
     region: frankfurt
     plan: starter
     buildCommand: |
-      cd backend && npm ci --production=false
+      cd backend && npm ci --only=production
       npm run build
     startCommand: cd backend && npm start
     envVars:
@@ -28,102 +28,41 @@ services:
       - key: SUPABASE_ANON_KEY
         sync: false
       - key: SUPABASE_BUCKET_NAME
-        sync: false
+        value: hardbanrecords-files
       - key: JWT_SECRET
         generateValue: true
       - key: REFRESH_TOKEN_SECRET
         generateValue: true
       - key: CORS_ORIGIN
+        value: https://hardbanrecords-frontend.onrender.com
+      - key: GROQ_API_KEY
         sync: false
-      - key: GOOGLE_API_KEY
-        sync: false
-      - key: MUSIC_SERVICE_URL
-        value: internal://hardbanrecords-music
-      - key: PUBLISHING_SERVICE_URL
-        value: internal://hardbanrecords-publishing
       - key: LOG_LEVEL
-        value: "info"
+        value: info
       - key: RATE_LIMIT_WINDOW
-        value: "900000"
+        value: 900000
       - key: RATE_LIMIT_MAX_REQUESTS
-        value: "100"
+        value: 100
       - key: SESSION_SECRET
         generateValue: true
       - key: MAX_FILE_SIZE
-        value: "52428800"
+        value: 52428800
 
-  # Music Microservice
-  - type: web
-    name: hardbanrecords-music
-    runtime: node
-    region: frankfurt
-    plan: starter
-    buildCommand: |
-      cd backend/music && npm ci --production=false
-      npm run build
-    startCommand: cd backend/music && npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3002
-      - key: DATABASE_URL
-        fromDatabase:
-          name: hardbanrecords-db
-          property: connectionString
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
-      - key: SUPABASE_ANON_KEY
-        sync: false
-      - key: SUPABASE_BUCKET_NAME
-        sync: false
-      - key: JWT_SECRET
-        generateValue: true
 
-  # Publishing Microservice
-  - type: web
-    name: hardbanrecords-publishing
-    runtime: node
-    region: frankfurt
-    plan: starter
-    buildCommand: |
-      cd backend/publishing && npm ci --production=false
-      npm run build
-    startCommand: cd backend/publishing && npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
-      - key: PORT
-        value: 3003
-      - key: DATABASE_URL
-        fromDatabase:
-          name: hardbanrecords-db
-          property: connectionString
-      - key: SUPABASE_URL
-        sync: false
-      - key: SUPABASE_SERVICE_ROLE_KEY
-        sync: false
-      - key: SUPABASE_ANON_KEY
-        sync: false
-      - key: SUPABASE_BUCKET_NAME
-        sync: false
-      - key: JWT_SECRET
-        generateValue: true
 
   # Frontend Web Service
   - type: web
     name: hardbanrecords-frontend
     runtime: node
-    plan: free
-    rootDir: frontend
-    buildCommand: npm install && npm run build
-    startCommand: npx serve -s dist
+    plan: starter
+    buildCommand: npm ci && npm run build
+    startCommand: npx serve -s dist -p $PORT
     autoDeploy: true
     envVars:
       - key: VITE_API_URL
-        value: https://hardbanrecords-api.onrender.com/api  # Set to backend URL
+        value: https://hardbanrecords-api.onrender.com/api
+      - key: VITE_APP_NAME
+        value: "HardbanRecords Lab"
       - key: NODE_ENV
         value: "production"
 
