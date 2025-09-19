@@ -1,7 +1,7 @@
 services:
   - type: web
     name: hardbanrecords-backend
-    env: node
+    runtime: node
     plan: free
     buildCommand: npm install
     startCommand: npm start

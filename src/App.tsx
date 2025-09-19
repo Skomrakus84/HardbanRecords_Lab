@@ -14,35 +14,42 @@ import {
   Building2,
   User
 } from 'lucide-react';
-import HomePageNew from './pages/HomePageNew';
-import ReleasesPageNew from './pages/music/ReleasesPageNew';
-import ArtistsPageNew from './pages/music/ArtistsPageNew';
-import DistributionPageNew from './pages/music/DistributionPageNew';
-import AnalyticsPageNew from './pages/music/AnalyticsPageNew';
+import HomePageNew from './pages/HomePageNewModern';
+import ReleasesPageNew from './pages/music/ReleasesPageNewTest';
+import ArtistsPageNew from './pages/music/ArtistsPageNewModern';
+import DistributionPageNew from './pages/music/DistributionPageNewModern';
+import AnalyticsPageNew from './pages/music/AnalyticsPageNewModern';
+import RoyaltiesPage from './pages/music/RoyaltiesPage';
+import AddReleasePage from './pages/music/AddReleasePage';
+import MusicDashboard from './modules/music/MusicDashboard';
 import PublishingDashboard from './pages/publishing/PublishingDashboard';
-import BooksPageNew from './pages/publishing/BooksPageNew';
-import ContractsPageNew from './pages/ContractsPageNew';
-import SettingsPageNew from './pages/SettingsPageNew';
+import BooksPageNew from './pages/publishing/BooksPageNewModern';
+import AddBookPage from './pages/publishing/AddBookPage';
+import ContractsPageNew from './pages/ContractsPageNewModern';
+import SettingsPageNew from './pages/SettingsPageNewModern';
 import FloatingActionButton from './components/ui/FloatingActionButton';
 
 const Sidebar: React.FC = () => {
   const location = useLocation();
+  const [isHovered, setIsHovered] = React.useState(false);
 
   const sidebarStyle = {
-    width: '280px',
-    minWidth: '280px',
-    maxWidth: '280px',
+    width: isHovered ? '280px' : '80px',
+    minWidth: isHovered ? '280px' : '80px',
+    maxWidth: isHovered ? '280px' : '80px',
     backgroundColor: '#0f172a',
     color: '#f8fafc',
     height: '100vh',
-    padding: '32px 24px',
+    padding: isHovered ? '32px 24px' : '32px 16px',
     position: 'fixed' as const,
     left: 0,
     top: 0,
     boxShadow: '4px 0 24px rgba(0,0,0,0.12)',
     borderRight: '1px solid #1e293b',
     zIndex: 1000,
-    flexShrink: 0
+    flexShrink: 0,
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+    overflow: 'hidden'
   };
 
   const menuItems = [
@@ -59,13 +66,33 @@ const Sidebar: React.FC = () => {
   ];
 
   return (
-    <div style={sidebarStyle}>
-      <div style={{borderBottom: '1px solid #334155', paddingBottom: '24px', marginBottom: '32px'}}>
-        <h1 style={{fontSize: '22px', fontWeight: '700', margin: '0 0 8px 0', color: '#f8fafc', display: 'flex', alignItems: 'center', gap: '8px'}}>
-          <Building2 size={24} />
-          HardbanRecords
-        </h1>
-        <p style={{fontSize: '14px', color: '#94a3b8', margin: 0, fontWeight: '500'}}>Lab Platform</p>
+    <div
+      style={sidebarStyle}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div style={{
+        borderBottom: '1px solid #334155',
+        paddingBottom: '24px',
+        marginBottom: '32px',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: isHovered ? 'flex-start' : 'center',
+        gap: isHovered ? '8px' : '0',
+        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
+      }}>
+        <Building2 size={24} style={{ flexShrink: 0 }} />
+        {isHovered && (
+          <div style={{
+            opacity: isHovered ? 1 : 0,
+            transition: 'opacity 0.3s ease 0.1s'
+          }}>
+            <h1 style={{fontSize: '22px', fontWeight: '700', margin: '0 0 8px 0', color: '#f8fafc'}}>
+              HardbanRecords
+            </h1>
+            <p style={{fontSize: '14px', color: '#94a3b8', margin: 0, fontWeight: '500'}}>Lab Platform</p>
+          </div>
+        )}
       </div>
 
       {menuItems.map((item) => {
@@ -82,20 +109,8 @@ const Sidebar: React.FC = () => {
             }}
           >
             <div
-              onMouseEnter={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = '#1e293b';
-                  e.currentTarget.style.transform = 'translateX(4px)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isActive) {
-                  e.currentTarget.style.backgroundColor = 'transparent';
-                  e.currentTarget.style.transform = 'translateX(0)';
-                }
-              }}
               style={{
-                padding: '16px 20px',
+                padding: isHovered ? '16px 20px' : '16px',
                 margin: '8px 0',
                 borderRadius: '12px',
                 cursor: 'pointer',
@@ -103,14 +118,62 @@ const Sidebar: React.FC = () => {
                 transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '16px',
+                justifyContent: isHovered ? 'flex-start' : 'center',
+                gap: isHovered ? '16px' : '0',
                 border: isActive ? '1px solid #475569' : '1px solid transparent',
                 position: 'relative' as const,
-                overflow: 'hidden'
+                overflow: 'hidden',
+                minHeight: '52px'
+              }}
+              onMouseEnter={(e) => {
+                if (!isActive && isHovered) {
+                  e.currentTarget.style.backgroundColor = '#1e293b';
+                  e.currentTarget.style.transform = 'translateX(4px)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                if (!isActive) {
+                  e.currentTarget.style.backgroundColor = isActive ? '#334155' : 'transparent';
+                  e.currentTarget.style.transform = 'translateX(0)';
+                }
               }}
             >
-              <item.icon size={20} />
-              <span style={{fontSize: '15px', fontWeight: '500'}}>{item.label}</span>
+              <item.icon size={20} style={{ flexShrink: 0 }} />
+              {isHovered && (
+                <span style={{
+                  fontSize: '15px',
+                  fontWeight: '500',
+                  opacity: isHovered ? 1 : 0,
+                  transition: 'opacity 0.3s ease 0.1s',
+                  whiteSpace: 'nowrap'
+                }}>
+                  {item.label}
+                </span>
+              )}
+
+              {/* Tooltip dla collapsed state */}
+              {!isHovered && (
+                <div style={{
+                  position: 'absolute',
+                  left: '70px',
+                  backgroundColor: '#1e293b',
+                  color: '#f8fafc',
+                  padding: '8px 12px',
+                  borderRadius: '8px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  whiteSpace: 'nowrap',
+                  opacity: 0,
+                  pointerEvents: 'none',
+                  transition: 'all 0.3s ease',
+                  zIndex: 1001,
+                  boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+                }}
+                className="sidebar-tooltip"
+                >
+                  {item.label}
+                </div>
+              )}
             </div>
           </Link>
         );
@@ -175,11 +238,12 @@ const MainContent: React.FC = () => {
   const navigate = useNavigate();
 
   const mainStyle = {
-    marginLeft: '280px',
+    marginLeft: '120px',
     padding: '0',
     backgroundColor: '#f8fafc',
     minHeight: '100vh',
-    width: 'calc(100% - 280px)'
+    width: 'calc(100% - 120px)',
+    transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)'
   };
 
   const contentStyle = {
@@ -220,12 +284,19 @@ const MainContent: React.FC = () => {
       <div style={contentStyle}>
         <Routes>
           <Route path="/" element={<HomePageNew />} />
-          <Route path="/music" element={<ReleasesPageNew />} />
+          <Route path="/music" element={<MusicDashboard />} />
+          <Route path="/music/releases" element={<ReleasesPageNew />} />
+          <Route path="/music/releases/new" element={<AddReleasePage />} />
+          <Route path="/music/artists" element={<ArtistsPageNew />} />
+          <Route path="/music/analytics" element={<AnalyticsPageNew />} />
+          <Route path="/music/royalties" element={<RoyaltiesPage />} />
+          <Route path="/music/distribution" element={<DistributionPageNew />} />
           <Route path="/releases" element={<ReleasesPageNew />} />
           <Route path="/artists" element={<ArtistsPageNew />} />
           <Route path="/contracts" element={<ContractsPageNew />} />
           <Route path="/publishing/*" element={<PublishingDashboard />} />
           <Route path="/books" element={<BooksPageNew />} />
+          <Route path="/books/new" element={<AddBookPage />} />
           <Route path="/analytics" element={<AnalyticsPageNew />} />
           <Route path="/distribution" element={<DistributionPageNew />} />
           <Route path="/settings" element={<SettingsPageNew />} />
@@ -235,12 +306,12 @@ const MainContent: React.FC = () => {
       {/* Floating Action Button for quick actions */}
       <FloatingActionButton
         onClick={() => {
-          if (location.pathname.startsWith('/publishing')) {
-            navigate('/publishing/books/new');
+          if (location.pathname.startsWith('/publishing') || location.pathname.startsWith('/books')) {
+            navigate('/books/new');
           } else if (location.pathname.startsWith('/music') || location.pathname.startsWith('/releases')) {
             navigate('/music/releases/new');
           } else {
-            navigate('/publishing/books/new');
+            navigate('/books/new');
           }
         }}
         tooltip="Quick Upload"
@@ -250,6 +321,35 @@ const MainContent: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  // Add global styles for tooltips
+  React.useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .sidebar-tooltip {
+        opacity: 0 !important;
+        transform: translateX(-10px);
+        pointer-events: none;
+      }
+
+      .sidebar-tooltip:hover,
+      div:hover > .sidebar-tooltip {
+        opacity: 1 !important;
+        transform: translateX(0);
+      }
+
+      /* Show tooltip on parent hover */
+      div:hover .sidebar-tooltip {
+        opacity: 1 !important;
+        transform: translateX(0);
+      }
+    `;
+    document.head.appendChild(style);
+
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
+
   return (
     <div style={{
       margin: 0,

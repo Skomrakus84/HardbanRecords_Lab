@@ -159,11 +159,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
   error: null,
   view: 'DASHBOARD',
   loading: {
-    metadata: false, releaseDate: false, forecast: false, syncMatch: false, coverArt: false, 
-    aandrScout: false, funding: false, collabFinder: false, listenerAnalytics: false, 
-    splitAgreement: false, proofread: false, plotAnalysis: false, enrichment: false, 
-    illustration: false, blurb: false, keywords: false, salesForecast: false, 
-    marketTrends: false, marketingAssets: false, worldConsistency: false, 
+    metadata: false, releaseDate: false, forecast: false, syncMatch: false, coverArt: false,
+    aandrScout: false, funding: false, collabFinder: false, listenerAnalytics: false,
+    splitAgreement: false, proofread: false, plotAnalysis: false, enrichment: false,
+    illustration: false, blurb: false, keywords: false, salesForecast: false,
+    marketTrends: false, marketingAssets: false, worldConsistency: false,
     rightsMatch: false, bookCover: false
   },
   toasts: [],
@@ -183,12 +183,12 @@ export const useAppStore = create<AppStore>((set, get) => ({
 
   // Actions
   clearError: () => set({ error: null }),
-  
+
   fetchReleases: async () => {
     set({ isLoading: true, error: null });
     try {
-      const response = await import('../api/client').then(m => m.musicApi.getAll());
-      const releases = response.data.releases || response.data;
+      const response = await import('../api/client').then(m => m.apiClient.get('/data'));
+      const releases = response.data.releases || [];
       set(state => ({
         music: {
           ...state.music,
@@ -234,45 +234,45 @@ export const useAppStore = create<AppStore>((set, get) => ({
   },
 
   setView: (view) => set({ view }),
-  
-  setLoading: (key, value) => set(state => ({ 
-    loading: { ...state.loading, [key]: value } 
+
+  setLoading: (key, value) => set(state => ({
+    loading: { ...state.loading, [key]: value }
   })),
-  
-  addToast: (message, type = 'success') => set(state => ({ 
-    toasts: [...state.toasts, { id: Date.now(), message, type }] 
+
+  addToast: (message, type = 'success') => set(state => ({
+    toasts: [...state.toasts, { id: Date.now(), message, type }]
   })),
-  
-  dismissToast: (id) => set(state => ({ 
-    toasts: state.toasts.filter(t => t.id !== id) 
+
+  dismissToast: (id) => set(state => ({
+    toasts: state.toasts.filter(t => t.id !== id)
   })),
-  
+
   startTour: () => {
     if (!get().onboarding.onboardingComplete) {
-      set(state => ({ 
-        onboarding: { ...state.onboarding, tourStepIndex: 0 } 
+      set(state => ({
+        onboarding: { ...state.onboarding, tourStepIndex: 0 }
       }));
     }
   },
-  
+
   nextTourStep: () => {
     const currentStepIndex = get().onboarding.tourStepIndex;
-    set(state => ({ 
-      onboarding: { ...state.onboarding, tourStepIndex: currentStepIndex + 1 } 
+    set(state => ({
+      onboarding: { ...state.onboarding, tourStepIndex: currentStepIndex + 1 }
     }));
   },
-  
+
   skipTour: () => {
-    set({ 
-      onboarding: { 
-        tourStepIndex: -1, 
-        onboardingComplete: true, 
-        activeTabOverride: undefined 
-      } 
+    set({
+      onboarding: {
+        tourStepIndex: -1,
+        onboardingComplete: true,
+        activeTabOverride: undefined
+      }
     });
     get().addToast("You're all set! Feel free to explore.", "success");
   },
-  
+
   addRelease: async (releaseData) => {
     try {
       await import('../api/client').then(m => m.musicApi.create(releaseData));
@@ -282,7 +282,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas dodawania wydania: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   updateMusicSplits: async (releaseId, splits) => {
     try {
       await import('../api/client').then(m => m.musicApi.updateSplits(String(releaseId), splits));
@@ -292,22 +292,25 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas aktualizacji podziałów: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   fetchMusicTasks: async () => {
     try {
-      const response = await import('../api/client').then(m => m.tasksApi.getAll());
-      const tasks = response.data.tasks || response.data;
+      // Mock tasks for now - dodamy API później
+      const mockTasks = [
+        { id: 1, text: 'Mix and master new album', completed: false, dueDate: '2024-01-15' },
+        { id: 2, text: 'Upload to streaming platforms', completed: true, dueDate: '2024-01-10' }
+      ];
       set(state => ({
         music: {
           ...state.music,
-          tasks: Array.isArray(tasks) ? tasks : []
+          tasks: mockTasks
         }
       }));
     } catch (error: any) {
       get().addToast('Błąd podczas pobierania zadań: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   addMusicTask: async (text, dueDate) => {
     try {
       await import('../api/client').then(m => m.tasksApi.create({ text, dueDate }));
@@ -317,7 +320,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas dodawania zadania: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   toggleMusicTask: async (id, completed) => {
     try {
       // If completed is not provided, find the task and toggle its current state
@@ -332,11 +335,11 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas zmiany statusu zadania: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   fetchBooks: async () => {
     try {
-      const response = await import('../api/client').then(m => m.apiClient.get('/publishing/books'));
-      const books = response.data.books || response.data;
+      const response = await import('../api/client').then(m => m.apiClient.get('/data'));
+      const books = response.data.books || [];
       set(state => ({
         publishing: {
           ...state.publishing,
@@ -347,7 +350,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas pobierania książek: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   addBook: async (bookData) => {
     try {
       const response = await import('../api/client').then(m => m.apiClient.post('/publishing/books', bookData));
@@ -359,7 +362,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       return undefined;
     }
   },
-  
+
   updateBook: async (bookId, data) => {
     try {
       await import('../api/client').then(m => m.apiClient.patch(`/publishing/books/${bookId}`, data));
@@ -369,7 +372,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas aktualizacji książki: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   updateBookSplits: async (bookId, splits) => {
     try {
       await import('../api/client').then(m => m.apiClient.patch(`/publishing/books/${bookId}/splits`, { splits }));
@@ -379,25 +382,25 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas aktualizacji splits: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   addChapter: (bookId) => {
     const book = get().publishing.books.find(b => b.id === bookId);
     if (!book) return;
-    const newChapter: BookChapter = { 
-      title: `Chapter ${book.chapters.length + 1}`, 
-      content: "" 
+    const newChapter: BookChapter = {
+      title: `Chapter ${book.chapters.length + 1}`,
+      content: ""
     };
     const updatedChapters = [...book.chapters, newChapter];
-    set(state => ({ 
-      publishing: { 
-        ...state.publishing, 
-        books: state.publishing.books.map(b => 
+    set(state => ({
+      publishing: {
+        ...state.publishing,
+        books: state.publishing.books.map(b =>
           b.id === bookId ? { ...b, chapters: updatedChapters } : b
-        ) 
-      } 
+        )
+      }
     }));
   },
-  
+
   updateChapterContent: async (bookId, chapterIndex, newContent) => {
     try {
       await import('../api/client').then(m => m.apiClient.patch(`/publishing/books/${bookId}/chapters/${chapterIndex}`, { content: newContent }));
@@ -407,33 +410,36 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas aktualizacji rozdziału: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   replaceBookChapters: (bookId, chapters) => {
-    set(state => ({ 
-      publishing: { 
-        ...state.publishing, 
-        books: state.publishing.books.map(b => 
+    set(state => ({
+      publishing: {
+        ...state.publishing,
+        books: state.publishing.books.map(b =>
           b.id === bookId ? { ...b, chapters } : b
-        ) 
-      } 
+        )
+      }
     }));
   },
-  
+
   fetchPublishingTasks: async () => {
     try {
-      const response = await import('../api/client').then(m => m.apiClient.get('/publishing/tasks'));
-      const tasks = response.data.tasks || response.data;
+      // Mock tasks for now - dodamy API później
+      const mockTasks = [
+        { id: 1, text: 'Edit chapter 5', completed: false, dueDate: '2024-01-20' },
+        { id: 2, text: 'Submit to Amazon KDP', completed: true, dueDate: '2024-01-12' }
+      ];
       set(state => ({
         publishing: {
           ...state.publishing,
-          tasks: Array.isArray(tasks) ? tasks : []
+          tasks: mockTasks
         }
       }));
     } catch (error: any) {
       get().addToast('Błąd podczas pobierania zadań wydawniczych: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   addPublishingTask: async (text, dueDate) => {
     try {
       await import('../api/client').then(m => m.apiClient.post('/publishing/tasks', { text, dueDate }));
@@ -443,7 +449,7 @@ export const useAppStore = create<AppStore>((set, get) => ({
       get().addToast('Błąd podczas dodawania zadania wydawniczego: ' + (error?.response?.data?.message || error.message), 'error');
     }
   },
-  
+
   togglePublishingTask: async (id, completed) => {
     try {
       // If completed is not provided, find the task and toggle its current state

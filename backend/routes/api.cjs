@@ -6,10 +6,30 @@ const { createClient } = require('@supabase/supabase-js');
 const authorizeRoles = require('../middleware/authRole.cjs');
 
 // --- Konfiguracja Klienta Supabase ---
-const supabase = createClient(
-    `https://fannbqzvjwyazeosectm.supabase.co`,
-    process.env.SUPABASE_SECRET_ACCESS_KEY
-);
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+let supabase;
+if (supabaseUrl && supabaseKey) {
+    supabase = createClient(supabaseUrl, supabaseKey);
+} else {
+    console.warn("Supabase credentials not found, some features may not work properly");
+    // Dummy client for local development without Supabase
+    supabase = {
+        from: () => ({
+            select: () => ({ data: [], error: null }),
+            insert: () => ({ data: [], error: null }),
+            update: () => ({ data: [], error: null }),
+            delete: () => ({ data: [], error: null })
+        }),
+        storage: {
+            from: () => ({
+                upload: () => ({ data: { path: "test/path" }, error: null }),
+                getPublicUrl: () => ({ data: { publicUrl: "http://localhost:3001/test.jpg" } })
+            })
+        }
+    };
+}
 
 // Helpery
 const formatDate = (date) => {
@@ -64,7 +84,7 @@ router.get('/supabase-test', async (req, res) => {
             .from('artists')
             .select('id, name')
             .limit(1);
-        
+
         if (error) {
             return res.json({
                 success: false,
@@ -182,7 +202,7 @@ router.get('/data', async (req, res) => {
         // Pobierz dane przez Supabase client
         const [
             musicReleasesRes,
-            musicSplitsRes, 
+            musicSplitsRes,
             musicTasksRes,
             booksRes,
             bookSplitsRes,
@@ -205,7 +225,7 @@ router.get('/data', async (req, res) => {
         // Sprawdź błędy
         const errors = [musicReleasesRes, musicSplitsRes, musicTasksRes, booksRes, bookSplitsRes, bookChaptersRes, bookIllustrationsRes, publishingTasksRes]
             .filter(res => res.error).map(res => res.error.message);
-        
+
         if (errors.length > 0) {
             return res.json({
                 success: false,
@@ -216,68 +236,68 @@ router.get('/data', async (req, res) => {
 
         // Mapuj splits
         const musicSplitsMap = (musicSplitsRes.data || []).reduce((acc, split) => {
-            (acc[split.release_id] = acc[split.release_id] || []).push({ 
-                name: split.artist_id, 
-                share: String(split.percentage) 
-            }); 
-            return acc; 
+            (acc[split.release_id] = acc[split.release_id] || []).push({
+                name: split.artist_id,
+                share: String(split.percentage)
+            });
+            return acc;
         }, {});
 
         const bookSplitsMap = (bookSplitsRes.data || []).reduce((acc, split) => {
-            (acc[split.book_id] = acc[split.book_id] || []).push({ 
-                name: split.author_id, 
-                share: String(split.percentage) 
-            }); 
-            return acc; 
+            (acc[split.book_id] = acc[split.book_id] || []).push({
+                name: split.author_id,
+                share: String(split.percentage)
+            });
+            return acc;
         }, {});
 
         // Mapuj chapters
         const bookChaptersMap = (bookChaptersRes.data || []).reduce((acc, chapter) => {
-            (acc[chapter.book_id] = acc[chapter.book_id] || []).push({ 
-                title: chapter.title, 
-                content: chapter.content 
-            }); 
-            return acc; 
+            (acc[chapter.book_id] = acc[chapter.book_id] || []).push({
+                title: chapter.title,
+                content: chapter.content
+            });
+            return acc;
         }, {});
 
         // Mapuj illustrations
         const bookIllustrationsMap = (bookIllustrationsRes.data || []).reduce((acc, illustration) => {
-            (acc[illustration.book_id] = acc[illustration.book_id] || []).push({ 
-                url: illustration.image_url, 
-                prompt: illustration.description 
-            }); 
-            return acc; 
+            (acc[illustration.book_id] = acc[illustration.book_id] || []).push({
+                url: illustration.image_url,
+                prompt: illustration.description
+            });
+            return acc;
         }, {});
 
         // Przygotuj dane wyjściowe
-        const releasesWithSplits = (musicReleasesRes.data || []).map(r => ({ 
-            ...r, 
-            releaseDate: formatDate(r.release_date), 
-            splits: musicSplitsMap[r.id] || [] 
+        const releasesWithSplits = (musicReleasesRes.data || []).map(r => ({
+            ...r,
+            releaseDate: formatDate(r.release_date),
+            splits: musicSplitsMap[r.id] || []
         }));
 
-        const booksWithDetails = (booksRes.data || []).map(b => ({ 
-            ...b, 
-            rights: { 
-                territorial: false, 
-                translation: false, 
-                adaptation: false, 
-                audio: false, 
-                drm: false 
-            }, 
-            splits: bookSplitsMap[b.id] || [], 
-            chapters: bookChaptersMap[b.id] || [], 
-            illustrations: bookIllustrationsMap[b.id] || [] 
+        const booksWithDetails = (booksRes.data || []).map(b => ({
+            ...b,
+            rights: {
+                territorial: false,
+                translation: false,
+                adaptation: false,
+                audio: false,
+                drm: false
+            },
+            splits: bookSplitsMap[b.id] || [],
+            chapters: bookChaptersMap[b.id] || [],
+            illustrations: bookIllustrationsMap[b.id] || []
         }));
 
         res.json({
-            music: { 
-                releases: releasesWithSplits, 
-                tasks: (musicTasksRes.data || []).map(transformTask) 
+            music: {
+                releases: releasesWithSplits,
+                tasks: (musicTasksRes.data || []).map(transformTask)
             },
-            publishing: { 
-                books: booksWithDetails, 
-                tasks: (publishingTasksRes.data || []).map(transformTask) 
+            publishing: {
+                books: booksWithDetails,
+                tasks: (publishingTasksRes.data || []).map(transformTask)
             },
             onboardingComplete: appConfigRes.data ? appConfigRes.data.config_value === 'true' : false,
         });
@@ -294,9 +314,9 @@ router.get('/s3-presigned-url', async (req, res) => {
     if (!fileName || !fileType) {
         return res.status(400).json({ message: "Parametry 'fileName' i 'fileType' są wymagane." });
     }
-    
+
     const uniqueFileName = `${Date.now()}_${fileName}`;
-    
+
     try {
         // Generowanie presigned URL dla Supabase Storage
         const { data, error } = await supabase.storage
@@ -311,7 +331,7 @@ router.get('/s3-presigned-url', async (req, res) => {
         }
 
         const fileUrl = `https://fannbqzvjwyazeosectm.supabase.co/storage/v1/object/public/${process.env.SUPABASE_BUCKET_NAME}/${uniqueFileName}`;
-        
+
         res.json({
             presignedUrl: data.signedUrl,
             fileUrl: fileUrl

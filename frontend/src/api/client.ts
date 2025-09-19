@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const API_URL = 'http://localhost:3001/api';
+// Use environment variable for API URL if available, otherwise use localhost for development
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
 
 // Mock data for development
 const mockData = {
@@ -37,22 +38,22 @@ export const apiClient = axios.create({
 const originalGet = apiClient.get;
 apiClient.get = async (url: string, config?: any): Promise<any> => {
   console.log('🎭 Mock API call:', url);
-  
+
   // Return mock data for /data endpoint
   if (url === '/data' || url.endsWith('/data')) {
-    return Promise.resolve({ 
+    return Promise.resolve({
       data: mockData['/data'],
       status: 200,
       statusText: 'OK'
     });
   }
-  
+
   // For other endpoints, try real API call
   try {
     return await originalGet.call(apiClient, url, config);
   } catch (error) {
     console.log('🔌 API offline, returning mock data for:', url);
-    return Promise.resolve({ 
+    return Promise.resolve({
       data: { message: 'Mock response for ' + url },
       status: 200,
       statusText: 'OK'
@@ -95,14 +96,14 @@ export async function uploadFileToS3(file: globalThis.File): Promise<{ fileUrl: 
   const { data } = await apiClient.get<S3PresignedUrlResponse>('/files/presigned-url', {
     params: { fileName: file.name, fileType: file.type }
   });
-  
+
   // 2. Upload file directly to S3
   await fetch(data.presigned_url, {
     method: 'PUT',
     headers: { 'Content-Type': file.type },
     body: file
   });
-  
+
   // 3. Return file URL
   return { fileUrl: data.file_url };
 }
@@ -120,7 +121,7 @@ export const musicApi = {
     approve: (id: string) => apiClient.post(`/music/releases/${id}/approve`),
     reject: (id: string, reason: string) => apiClient.post(`/music/releases/${id}/reject`, { reason }),
   },
-  
+
   // Tracks
   tracks: {
     getByRelease: (releaseId: string) => apiClient.get(`/music/releases/${releaseId}/tracks`),
@@ -139,7 +140,7 @@ export const musicApi = {
     },
     connections: {
       getAll: () => apiClient.get('/music/distribution/connections'),
-      create: (platformId: string, credentials: any) => 
+      create: (platformId: string, credentials: any) =>
         apiClient.post('/music/distribution/connections', { platform_id: platformId, ...credentials }),
       update: (id: string, data: any) => apiClient.patch(`/music/distribution/connections/${id}`, data),
       delete: (id: string) => apiClient.delete(`/music/distribution/connections/${id}`),
@@ -147,7 +148,7 @@ export const musicApi = {
     },
     releases: {
       getByRelease: (releaseId: string) => apiClient.get(`/music/releases/${releaseId}/distributions`),
-      create: (releaseId: string, platformIds: string[]) => 
+      create: (releaseId: string, platformIds: string[]) =>
         apiClient.post(`/music/releases/${releaseId}/distributions`, { platform_ids: platformIds }),
       update: (id: string, data: any) => apiClient.patch(`/music/distribution/${id}`, data),
       delete: (id: string) => apiClient.delete(`/music/distribution/${id}`),
@@ -190,7 +191,7 @@ export const musicApi = {
   collaborations: {
     getRequests: () => apiClient.get('/music/collaborations/requests'),
     sendRequest: (data: any) => apiClient.post('/music/collaborations/requests', data),
-    respondToRequest: (id: string, response: 'accepted' | 'declined') => 
+    respondToRequest: (id: string, response: 'accepted' | 'declined') =>
       apiClient.post(`/music/collaborations/requests/${id}/respond`, { response }),
     getByRelease: (releaseId: string) => apiClient.get(`/music/releases/${releaseId}/collaborations`),
   },
@@ -203,7 +204,7 @@ export const musicApi = {
     update: (id: string, data: any) => apiClient.patch(`/music/playlists/${id}`, data),
     delete: (id: string) => apiClient.delete(`/music/playlists/${id}`),
     getTracks: (id: string) => apiClient.get(`/music/playlists/${id}/tracks`),
-    addTrack: (id: string, trackId: string, position?: number) => 
+    addTrack: (id: string, trackId: string, position?: number) =>
       apiClient.post(`/music/playlists/${id}/tracks`, { track_id: trackId, position }),
     removeTrack: (id: string, trackId: string) => apiClient.delete(`/music/playlists/${id}/tracks/${trackId}`),
   },
@@ -232,7 +233,7 @@ export const publishingApi = {
     create: (publicationId: string, data: any) => apiClient.post(`/publishing/publications/${publicationId}/chapters`, data),
     update: (id: string, data: any) => apiClient.patch(`/publishing/chapters/${id}`, data),
     delete: (id: string) => apiClient.delete(`/publishing/chapters/${id}`),
-    reorder: (publicationId: string, chapterIds: string[]) => 
+    reorder: (publicationId: string, chapterIds: string[]) =>
       apiClient.post(`/publishing/publications/${publicationId}/chapters/reorder`, { chapter_ids: chapterIds }),
   },
 };
@@ -268,9 +269,9 @@ export const tasksApi = {
 export const aiApi = {
   generateImage: (prompt: string) => apiClient.post('/ai/generate-image', { prompt }),
   generateContent: (prompt: string) => apiClient.post('/ai/generate-content', { prompt }),
-  generateLyrics: (genre?: string, mood?: string, theme?: string) => 
+  generateLyrics: (genre?: string, mood?: string, theme?: string) =>
     apiClient.post('/ai/generate-lyrics', { genre, mood, theme }),
-  enhanceAudio: (trackId: string, enhancements: string[]) => 
+  enhanceAudio: (trackId: string, enhancements: string[]) =>
     apiClient.post(`/ai/enhance-audio/${trackId}`, { enhancements }),
 };
 

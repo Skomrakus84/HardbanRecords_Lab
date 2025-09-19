@@ -7,6 +7,7 @@ interface ButtonProps {
   size?: 'sm' | 'md' | 'lg';
   disabled?: boolean;
   className?: string;
+  icon?: string | React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -15,7 +16,8 @@ const Button: React.FC<ButtonProps> = ({
   variant = 'primary',
   size = 'md',
   disabled = false,
-  className
+  className,
+  icon
 }) => {
   const getButtonStyles = (): CSSProperties => {
     const baseStyles: CSSProperties = {
@@ -128,7 +130,11 @@ const Button: React.FC<ButtonProps> = ({
       onMouseLeave={handleMouseLeave}
       className={className}
     >
-      {icon && <img src={icon} alt="" style={{width: '20px', height: '20px'}} />}
+      {icon && (
+        typeof icon === 'string'
+          ? <img src={icon} alt="" style={{width: '20px', height: '20px'}} />
+          : <span style={{display: 'flex', alignItems: 'center'}}>{icon}</span>
+      )}
       {children}
     </button>
   );

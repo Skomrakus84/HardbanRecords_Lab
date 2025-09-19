@@ -1,6 +1,0 @@
-../backend
-node_modules
-.git
-App.tsx
-App.test.tsx
-render.yaml

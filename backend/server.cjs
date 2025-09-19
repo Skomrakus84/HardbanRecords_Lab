@@ -22,7 +22,29 @@ const PORT = process.env.PORT || 3001;
 // Initialize Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+let supabase;
+if (supabaseUrl && supabaseServiceKey) {
+    supabase = createClient(supabaseUrl, supabaseServiceKey);
+    console.log('Supabase client initialized');
+} else {
+    console.warn('Supabase credentials not found, running in mock mode');
+    // Dummy client for local development without Supabase
+    supabase = {
+        from: () => ({
+            select: () => ({ data: [], error: null }),
+            insert: () => ({ data: [], error: null }),
+            update: () => ({ data: [], error: null }),
+            delete: () => ({ data: [], error: null })
+        }),
+        storage: {
+            from: () => ({
+                upload: () => ({ data: { path: "test/path" }, error: null }),
+                getPublicUrl: () => ({ data: { publicUrl: "http://localhost:3001/test.jpg" } })
+            })
+        }
+    };
+}
 
 // Security middleware
 app.use(helmet({
