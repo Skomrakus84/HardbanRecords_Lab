@@ -9,6 +9,8 @@
     "isolatedModules": true,
     "moduleDetection": "force",
     "jsx": "react-jsx",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "strict": true,
     "exactOptionalPropertyTypes": true,
     "noImplicitReturns": true,
