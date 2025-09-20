@@ -1,18 +1,9 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
-import {
-  Home,
-  Music,
-  Disc3,
-  Users,
-  FileText,
-  BookOpen,
-  Book,
-  BarChart3,
-  Globe,
-  Settings,
-  Building2,
-  User
+import { 
+  Home, Music, Disc3, Users, FileText, BookOpen, Book, 
+  BarChart3, Globe, Settings, Building2, User, ChevronDown,
+  UserCircle, Shield, LogOut, Bell 
 } from 'lucide-react';
 import HomePageNew from './pages/HomePageNewModern';
 import ReleasesPageNew from './pages/music/ReleasesPageNewTest';
@@ -182,6 +173,118 @@ const Sidebar: React.FC = () => {
   );
 };
 
+const UserMenu: React.FC = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const menuItems = [
+    { icon: UserCircle, label: 'Profile', action: () => console.log('Profile clicked') },
+    { icon: Settings, label: 'Settings', action: () => console.log('Settings clicked') },
+    { icon: Bell, label: 'Notifications', action: () => console.log('Notifications clicked') },
+    { icon: Shield, label: 'Admin Panel', action: () => console.log('Admin clicked') },
+    { divider: true },
+    { icon: LogOut, label: 'Logout', action: () => console.log('Logout clicked'), danger: true }
+  ];
+
+  return (
+    <div ref={menuRef} style={{ position: 'relative' }}>
+      <div 
+        onClick={() => setIsOpen(!isOpen)}
+        style={{
+          width: '44px',
+          height: '44px',
+          borderRadius: '50%',
+          backgroundColor: '#334155',
+          border: '2px solid #475569',
+          cursor: 'pointer',
+          transition: 'all 0.3s ease',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative'
+        }}
+      >
+        <User size={24} color="#f8fafc" />
+        <ChevronDown 
+          size={12} 
+          color="#f8fafc" 
+          style={{ 
+            position: 'absolute', 
+            bottom: '2px', 
+            right: '2px',
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            transition: 'transform 0.3s ease'
+          }} 
+        />
+      </div>
+
+      {isOpen && (
+        <div style={{
+          position: 'absolute',
+          top: '100%',
+          right: '0',
+          marginTop: '8px',
+          background: 'rgba(255, 255, 255, 0.95)',
+          backdropFilter: 'blur(20px)',
+          borderRadius: '16px',
+          padding: '8px',
+          minWidth: '200px',
+          boxShadow: '0 20px 40px rgba(0, 0, 0, 0.15)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
+          zIndex: 1000
+        }}>
+          {menuItems.map((item, index) => (
+            item.divider ? (
+              <div key={index} style={{ 
+                height: '1px', 
+                background: 'rgba(0, 0, 0, 0.1)', 
+                margin: '8px 0' 
+              }} />
+            ) : (
+              <div
+                key={index}
+                onClick={item.action}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  color: item.danger ? '#ef4444' : '#334155',
+                  fontSize: '14px',
+                  fontWeight: '500'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = item.danger ? 'rgba(239, 68, 68, 0.1)' : 'rgba(59, 130, 246, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                }}
+              >
+                <item.icon size={16} />
+                {item.label}
+              </div>
+            )
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
 const Header: React.FC<{ title: string }> = ({ title }) => {
   const headerStyle = {
     backgroundColor: '#ffffff',
@@ -214,20 +317,7 @@ const Header: React.FC<{ title: string }> = ({ title }) => {
           <span style={{width: '8px', height: '8px', backgroundColor: '#22c55e', borderRadius: '50%'}}></span>
           All Systems Operational
         </div>
-        <div style={{
-          width: '44px',
-          height: '44px',
-          borderRadius: '50%',
-          backgroundColor: '#334155',
-          border: '2px solid #475569',
-          cursor: 'pointer',
-          transition: 'all 0.3s ease',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
-        }}>
-          <User size={24} color="#f8fafc" />
-        </div>
+        <UserMenu />
       </div>
     </div>
   );

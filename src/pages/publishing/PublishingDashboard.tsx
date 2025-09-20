@@ -18,15 +18,37 @@ const PublishingDashboard: React.FC = () => {
   ];
 
   return (
-    <div className="publishing-dashboard">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Digital Publishing</h1>
-        <p className="text-gray-600">Manage your book publishing and distribution across multiple platforms</p>
+    <div 
+      style={{
+        minHeight: '100vh',
+        padding: '24px',
+        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(15, 23, 42, 0.95) 100%), url("/images/modern-library.jpg")',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed'
+      }}
+    >
+      <div style={{ marginBottom: '32px' }}>
+        <h1 style={{ 
+          fontSize: '48px', 
+          fontWeight: '700', 
+          color: '#f8fafc',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '16px',
+          margin: '0 0 8px 0'
+        }}>
+          📚 Digital Publishing
+        </h1>
+        <p style={{ color: '#94a3b8', fontSize: '18px', margin: 0 }}>Manage your book publishing and distribution across multiple platforms</p>
       </div>
 
       {/* Sub Navigation */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
+      <div style={{ 
+        borderBottom: '1px solid rgba(255, 255, 255, 0.1)', 
+        marginBottom: '32px',
+        paddingBottom: '16px'
+      }}>
+        <nav style={{ display: 'flex', gap: '32px' }}>
           {navItems.map((item) => {
             const isActive = item.exact
               ? location.pathname === item.path
@@ -36,11 +58,15 @@ const PublishingDashboard: React.FC = () => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`py-2 px-1 border-b-2 font-medium text-sm ${
-                  isActive
-                    ? 'border-indigo-500 text-indigo-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                style={{
+                  padding: '8px 4px',
+                  borderBottom: isActive ? '2px solid #3b82f6' : '2px solid transparent',
+                  fontWeight: '500',
+                  fontSize: '14px',
+                  color: isActive ? '#60a5fa' : '#94a3b8',
+                  textDecoration: 'none',
+                  transition: 'all 0.3s ease'
+                }}
               >
                 {item.label}
               </Link>
@@ -66,59 +92,68 @@ const PublishingDashboard: React.FC = () => {
 // Overview component
 const PublishingOverview: React.FC = () => {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '32px' }}>
       {/* Stats Cards */}
-      <div className="bg-white overflow-hidden shadow rounded-lg">
-        <div className="p-5">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">📚</span>
-              </div>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Total Books</dt>
-                <dd className="text-lg font-medium text-gray-900">24</dd>
-              </dl>
-            </div>
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '20px',
+        padding: '24px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Total Books</p>
+            <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>24</p>
           </div>
+          <div style={{ fontSize: '32px' }}>📚</div>
+        </div>
+        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: '#22c55e', fontSize: '14px' }}>📈 +8%</span>
+          <span style={{ color: '#94a3b8', fontSize: '14px' }}>this month</span>
         </div>
       </div>
 
-      <div className="bg-white overflow-hidden shadow rounded-lg">
-        <div className="p-5">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-blue-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">👥</span>
-              </div>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Active Authors</dt>
-                <dd className="text-lg font-medium text-gray-900">15</dd>
-              </dl>
-            </div>
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '20px',
+        padding: '24px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Active Authors</p>
+            <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>15</p>
           </div>
+          <div style={{ fontSize: '32px' }}>👥</div>
+        </div>
+        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: '#22c55e', fontSize: '14px' }}>🆕 +2</span>
+          <span style={{ color: '#94a3b8', fontSize: '14px' }}>new authors</span>
         </div>
       </div>
 
-      <div className="bg-white overflow-hidden shadow rounded-lg">
-        <div className="p-5">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-green-500 rounded-md flex items-center justify-center">
-                <span className="text-white font-bold">💰</span>
-              </div>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">Monthly Sales</dt>
-                <dd className="text-lg font-medium text-gray-900">$3,245</dd>
-              </dl>
-            </div>
+      <div style={{
+        background: 'rgba(255, 255, 255, 0.05)',
+        backdropFilter: 'blur(20px)',
+        borderRadius: '20px',
+        padding: '24px',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <div>
+            <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Monthly Sales</p>
+            <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>$3,245</p>
           </div>
+          <div style={{ fontSize: '32px' }}>💰</div>
+        </div>
+        <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ color: '#22c55e', fontSize: '14px' }}>💸 +15%</span>
+          <span style={{ color: '#94a3b8', fontSize: '14px' }}>vs last month</span>
         </div>
       </div>
 

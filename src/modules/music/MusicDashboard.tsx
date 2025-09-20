@@ -38,19 +38,45 @@ export const MusicDashboard: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-900 via-blue-900 to-indigo-900">
+    <div 
+      style={{
+        minHeight: '100vh',
+        padding: '24px',
+        background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.97) 0%, rgba(15, 23, 42, 0.95) 100%), url("/images/modern-studio.jpg")',
+        backgroundSize: 'cover',
+        backgroundAttachment: 'fixed'
+      }}
+    >
       {/* Header */}
-      <div className="px-6 py-8">
-        <div className="flex items-center justify-between">
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h1 className="text-4xl font-bold text-white flex items-center gap-3">
+            <h1 style={{ 
+              fontSize: '48px', 
+              fontWeight: '700', 
+              color: '#f8fafc',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '16px',
+              margin: '0 0 8px 0'
+            }}>
               🎵 Music Dashboard
             </h1>
-            <p className="text-blue-200 mt-2">Manage your music catalog and artists</p>
+            <p style={{ color: '#94a3b8', fontSize: '18px', margin: 0 }}>Manage your music catalog and artists</p>
           </div>
           <Link
             to="/music/releases/new"
-            className="bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105"
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6, #1d4ed8)',
+              color: 'white',
+              padding: '12px 24px',
+              borderRadius: '16px',
+              fontWeight: '600',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 10px 30px rgba(59, 130, 246, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.1)'
+            }}
           >
             ➕ New Release
           </Link>
@@ -58,154 +84,291 @@ export const MusicDashboard: React.FC = () => {
       </div>
 
       {/* Stats Overview */}
-      <div className="px-6 pb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center justify-between">
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px' }}>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p className="text-blue-200 text-sm font-medium">Total Releases</p>
-                <p className="text-3xl font-bold text-white">{releases.length}</p>
+                <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Total Releases</p>
+                <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>{releases.length}</p>
               </div>
-              <div className="text-4xl">🎼</div>
+              <div style={{ fontSize: '32px' }}>🎼</div>
             </div>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-green-400 text-sm">📈 +12%</span>
-              <span className="text-blue-200 text-sm">this month</span>
+            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#22c55e', fontSize: '14px' }}>📈 +12%</span>
+              <span style={{ color: '#94a3b8', fontSize: '14px' }}>this month</span>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center justify-between">
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p className="text-blue-200 text-sm font-medium">Active Artists</p>
-                <p className="text-3xl font-bold text-white">{artists.length}</p>
+                <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Active Artists</p>
+                <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>{artists.length}</p>
               </div>
-              <div className="text-4xl">🎤</div>
+              <div style={{ fontSize: '32px' }}>🎤</div>
             </div>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-green-400 text-sm">🆕 +3</span>
-              <span className="text-blue-200 text-sm">new this week</span>
+            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#22c55e', fontSize: '14px' }}>🆕 +3</span>
+              <span style={{ color: '#94a3b8', fontSize: '14px' }}>new this week</span>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center justify-between">
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p className="text-blue-200 text-sm font-medium">Monthly Streams</p>
-                <p className="text-3xl font-bold text-white">{musicStats.totalStreams.toLocaleString()}</p>
+                <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Monthly Streams</p>
+                <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>{musicStats.totalStreams.toLocaleString()}</p>
               </div>
-              <div className="text-4xl">📊</div>
+              <div style={{ fontSize: '32px' }}>📊</div>
             </div>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-green-400 text-sm">🔥 +28%</span>
-              <span className="text-blue-200 text-sm">vs last month</span>
+            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#22c55e', fontSize: '14px' }}>🔥 +28%</span>
+              <span style={{ color: '#94a3b8', fontSize: '14px' }}>vs last month</span>
             </div>
           </div>
 
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
-            <div className="flex items-center justify-between">
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '24px',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div>
-                <p className="text-blue-200 text-sm font-medium">Monthly Revenue</p>
-                <p className="text-3xl font-bold text-white">${musicStats.totalRevenue.toLocaleString()}</p>
+                <p style={{ color: '#94a3b8', fontSize: '14px', fontWeight: '500', margin: '0 0 8px 0' }}>Monthly Revenue</p>
+                <p style={{ fontSize: '32px', fontWeight: '700', color: '#f8fafc', margin: 0 }}>${musicStats.totalRevenue.toLocaleString()}</p>
               </div>
-              <div className="text-4xl">💰</div>
+              <div style={{ fontSize: '32px' }}>💰</div>
             </div>
-            <div className="mt-4 flex items-center gap-2">
-              <span className="text-green-400 text-sm">💸 +15%</span>
-              <span className="text-blue-200 text-sm">vs last month</span>
+            <div style={{ marginTop: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ color: '#22c55e', fontSize: '14px' }}>💸 +15%</span>
+              <span style={{ color: '#94a3b8', fontSize: '14px' }}>vs last month</span>
             </div>
           </div>
         </div>
       </div>
 
       {/* Quick Actions */}
-      <div className="px-6 pb-6">
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+      <div style={{ marginBottom: '32px' }}>
+        <h2 style={{ 
+          fontSize: '28px', 
+          fontWeight: '700', 
+          color: '#f8fafc',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
           ⚡ Quick Actions
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
           <Link
             to="/music/releases"
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white p-6 rounded-xl transition-all duration-300 group"
+            style={{
+              background: 'linear-gradient(135deg, #3b82f6, #8b5cf6)',
+              color: 'white',
+              padding: '24px',
+              borderRadius: '16px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'block'
+            }}
           >
-            <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">🎵</div>
-            <h3 className="font-semibold text-lg">View Releases</h3>
-            <p className="text-blue-100 text-sm mt-1">Manage all music releases</p>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🎵</div>
+            <h3 style={{ fontWeight: '600', fontSize: '18px', margin: '0 0 4px 0' }}>View Releases</h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>Manage all music releases</p>
           </Link>
 
           <Link
             to="/music/artists"
-            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-6 rounded-xl transition-all duration-300 group"
+            style={{
+              background: 'linear-gradient(135deg, #8b5cf6, #ec4899)',
+              color: 'white',
+              padding: '24px',
+              borderRadius: '16px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'block'
+            }}
           >
-            <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">🎤</div>
-            <h3 className="font-semibold text-lg">Artists</h3>
-            <p className="text-purple-100 text-sm mt-1">Manage artist profiles</p>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>🎤</div>
+            <h3 style={{ fontWeight: '600', fontSize: '18px', margin: '0 0 4px 0' }}>Artists</h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>Manage artist profiles</p>
           </Link>
 
           <Link
             to="/music/analytics"
-            className="bg-gradient-to-r from-green-600 to-blue-600 hover:from-green-700 hover:to-blue-700 text-white p-6 rounded-xl transition-all duration-300 group"
+            style={{
+              background: 'linear-gradient(135deg, #10b981, #3b82f6)',
+              color: 'white',
+              padding: '24px',
+              borderRadius: '16px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'block'
+            }}
           >
-            <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">📊</div>
-            <h3 className="font-semibold text-lg">Analytics</h3>
-            <p className="text-green-100 text-sm mt-1">Track performance</p>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>📊</div>
+            <h3 style={{ fontWeight: '600', fontSize: '18px', margin: '0 0 4px 0' }}>Analytics</h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>Track performance</p>
           </Link>
 
           <Link
             to="/music/royalties"
-            className="bg-gradient-to-r from-yellow-600 to-orange-600 hover:from-yellow-700 hover:to-orange-700 text-white p-6 rounded-xl transition-all duration-300 group"
+            style={{
+              background: 'linear-gradient(135deg, #f59e0b, #ef4444)',
+              color: 'white',
+              padding: '24px',
+              borderRadius: '16px',
+              textDecoration: 'none',
+              transition: 'all 0.3s ease',
+              border: '1px solid rgba(255, 255, 255, 0.1)',
+              display: 'block'
+            }}
           >
-            <div className="text-3xl mb-3 group-hover:scale-110 transition-transform">💰</div>
-            <h3 className="font-semibold text-lg">Royalties</h3>
-            <p className="text-yellow-100 text-sm mt-1">Revenue & payments</p>
+            <div style={{ fontSize: '32px', marginBottom: '12px' }}>💰</div>
+            <h3 style={{ fontWeight: '600', fontSize: '18px', margin: '0 0 4px 0' }}>Royalties</h3>
+            <p style={{ color: 'rgba(255, 255, 255, 0.8)', fontSize: '14px', margin: 0 }}>Revenue & payments</p>
           </Link>
         </div>
       </div>
 
       {/* Recent Releases */}
-      <div className="px-6 pb-6">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+      <div style={{ marginBottom: '32px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+          <h2 style={{ 
+            fontSize: '28px', 
+            fontWeight: '700', 
+            color: '#f8fafc',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            margin: 0
+          }}>
             🆕 Recent Releases
           </h2>
           <Link
             to="/music/releases"
-            className="text-blue-300 hover:text-white transition-colors"
+            style={{
+              color: '#60a5fa',
+              textDecoration: 'none',
+              fontWeight: '500'
+            }}
           >
             View all →
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '24px' }}>
           {releases.slice(0, 6).map((release) => (
             <div
               key={release.id}
-              className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-all duration-300 group"
+              style={{
+                background: 'rgba(255, 255, 255, 0.05)',
+                backdropFilter: 'blur(20px)',
+                borderRadius: '20px',
+                padding: '24px',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                transition: 'all 0.3s ease'
+              }}
             >
-              <div className="flex items-start gap-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-purple-600 rounded-xl flex items-center justify-center text-2xl">
+              <div style={{ display: 'flex', alignItems: 'start', gap: '16px' }}>
+                <div style={{
+                  width: '64px',
+                  height: '64px',
+                  background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+                  borderRadius: '16px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '24px',
+                  flexShrink: 0
+                }}>
                   🎵
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-white group-hover:text-blue-300 transition-colors truncate">
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <h3 style={{
+                    fontWeight: '600',
+                    color: '#f8fafc',
+                    fontSize: '16px',
+                    margin: '0 0 4px 0',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
                     {release.title}
                   </h3>
-                  <p className="text-blue-200 text-sm truncate">{release.artist}</p>
-                  <div className="flex items-center gap-3 mt-2">
-                    <span className="text-xs bg-blue-600/30 text-blue-200 px-2 py-1 rounded-full">
+                  <p style={{
+                    color: '#94a3b8',
+                    fontSize: '14px',
+                    margin: '0 0 8px 0',
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }}>
+                    {release.artist}
+                  </p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <span style={{
+                      fontSize: '12px',
+                      background: 'rgba(59, 130, 246, 0.2)',
+                      color: '#60a5fa',
+                      padding: '4px 8px',
+                      borderRadius: '12px'
+                    }}>
                       {release.status}
                     </span>
-                    <span className="text-xs text-gray-300">
+                    <span style={{
+                      fontSize: '12px',
+                      color: '#94a3b8'
+                    }}>
                       {new Date(release.releaseDate).toLocaleDateString()}
                     </span>
                   </div>
                 </div>
               </div>
 
-              <div className="mt-4 pt-4 border-t border-white/10">
-                <div className="flex justify-between items-center text-sm">
-                  <span className="text-blue-200">Status: {release.status}</span>
-                  <span className="text-green-400">{release.genre || 'Various'}</span>
+              <div style={{
+                marginTop: '16px',
+                paddingTop: '16px',
+                borderTop: '1px solid rgba(255, 255, 255, 0.1)'
+              }}>
+                <div style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '14px'
+                }}>
+                  <span style={{ color: '#94a3b8' }}>Status: {release.status}</span>
+                  <span style={{ color: '#22c55e' }}>{release.genre || 'Various'}</span>
                 </div>
               </div>
             </div>
@@ -213,13 +376,28 @@ export const MusicDashboard: React.FC = () => {
         </div>
 
         {releases.length === 0 && (
-          <div className="bg-white/10 backdrop-blur-lg rounded-2xl p-12 text-center border border-white/20">
-            <div className="text-6xl mb-4">🎵</div>
-            <h3 className="text-xl font-semibold text-white mb-2">No releases yet</h3>
-            <p className="text-blue-200 mb-6">Start by adding your first music release</p>
+          <div style={{
+            background: 'rgba(255, 255, 255, 0.05)',
+            backdropFilter: 'blur(20px)',
+            borderRadius: '20px',
+            padding: '48px',
+            textAlign: 'center',
+            border: '1px solid rgba(255, 255, 255, 0.1)'
+          }}>
+            <div style={{ fontSize: '64px', marginBottom: '16px' }}>🎵</div>
+            <h3 style={{ fontSize: '20px', fontWeight: '600', color: '#f8fafc', marginBottom: '8px' }}>No releases yet</h3>
+            <p style={{ color: '#94a3b8', marginBottom: '24px', fontSize: '16px' }}>Start by adding your first music release</p>
             <Link
               to="/music/releases/new"
-              className="bg-gradient-to-r from-pink-500 to-violet-600 hover:from-pink-600 hover:to-violet-700 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300"
+              style={{
+                background: 'linear-gradient(135deg, #ec4899, #8b5cf6)',
+                color: 'white',
+                padding: '12px 24px',
+                borderRadius: '16px',
+                fontWeight: '600',
+                textDecoration: 'none',
+                transition: 'all 0.3s ease'
+              }}
             >
               ➕ Add First Release
             </Link>
@@ -228,25 +406,42 @@ export const MusicDashboard: React.FC = () => {
       </div>
 
       {/* Platform Distribution */}
-      <div className="px-6 pb-8">
-        <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+      <div style={{ marginBottom: '32px' }}>
+        <h2 style={{ 
+          fontSize: '28px', 
+          fontWeight: '700', 
+          color: '#f8fafc',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px'
+        }}>
           🌍 Platform Distribution
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '16px' }}>
           {[
-            { name: 'Spotify', emoji: '🟢', color: 'from-green-500 to-green-600' },
-            { name: 'Apple Music', emoji: '🍎', color: 'from-gray-700 to-gray-800' },
-            { name: 'YouTube Music', emoji: '📺', color: 'from-red-500 to-red-600' },
-            { name: 'Amazon Music', emoji: '📦', color: 'from-orange-500 to-orange-600' },
-            { name: 'Deezer', emoji: '🎯', color: 'from-purple-500 to-purple-600' },
-            { name: 'Tidal', emoji: '🌊', color: 'from-blue-500 to-blue-600' }
+            { name: 'Spotify', emoji: '🟢', color: 'linear-gradient(135deg, #10b981, #059669)' },
+            { name: 'Apple Music', emoji: '🍎', color: 'linear-gradient(135deg, #374151, #1f2937)' },
+            { name: 'YouTube Music', emoji: '📺', color: 'linear-gradient(135deg, #ef4444, #dc2626)' },
+            { name: 'Amazon Music', emoji: '📦', color: 'linear-gradient(135deg, #f59e0b, #d97706)' },
+            { name: 'Deezer', emoji: '🎯', color: 'linear-gradient(135deg, #8b5cf6, #7c3aed)' },
+            { name: 'Tidal', emoji: '🌊', color: 'linear-gradient(135deg, #3b82f6, #2563eb)' }
           ].map((platform) => (
             <div
               key={platform.name}
-              className={`bg-gradient-to-r ${platform.color} p-4 rounded-xl text-white text-center hover:scale-105 transition-transform cursor-pointer`}
+              style={{
+                background: platform.color,
+                padding: '16px',
+                borderRadius: '16px',
+                color: 'white',
+                textAlign: 'center',
+                transition: 'transform 0.3s ease',
+                cursor: 'pointer',
+                border: '1px solid rgba(255, 255, 255, 0.1)'
+              }}
             >
-              <div className="text-3xl mb-2">{platform.emoji}</div>
-              <div className="font-semibold text-sm">{platform.name}</div>
+              <div style={{ fontSize: '32px', marginBottom: '8px' }}>{platform.emoji}</div>
+              <div style={{ fontWeight: '600', fontSize: '14px' }}>{platform.name}</div>
             </div>
           ))}
         </div>
