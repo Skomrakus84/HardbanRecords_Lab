@@ -7,8 +7,7 @@ function SimpleApp() {
       padding: '20px',
       backgroundColor: '#f0f0f0',
       color: '#333',
-      fontFamily: 'Arial, sans-serif',
-      minHeight: '100vh'
+      fontFamily: 'Arial, sans-serif'
     }}>
       <h1>🚀 HardbanRecords Lab - Test Page</h1>
       <p>Jeśli widzisz to, React działa poprawnie!</p>
@@ -19,10 +18,6 @@ function SimpleApp() {
           <li>✅ CSS inline działa</li>
           <li>✅ Vercel deployment sukces</li>
         </ul>
-      </div>
-      <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#e8f4fd', borderRadius: '5px' }}>
-        <h3>Następne kroki:</h3>
-        <p>Jeśli widzisz tę stronę, przywrócimy pełną aplikację!</p>
       </div>
     </div>
   );
