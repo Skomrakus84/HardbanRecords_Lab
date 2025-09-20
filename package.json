@@ -8,7 +8,9 @@
     "build": "vite build",
     "preview": "vite preview",
     "test": "vitest",
-    "test:e2e": "cypress open"
+    "test:e2e": "cypress open",
+    "vercel-build": "npm run build",
+    "start:backend": "node backend/server.cjs"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.26.0",

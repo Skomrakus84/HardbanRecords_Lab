@@ -3,30 +3,38 @@
   "name": "hardbanrecords-lab",
   "builds": [
     {
-      "src": "hardban-records-lab.tsx",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
-        "buildCommand": "echo 'No build needed for single file React app'"
+        "distDir": "dist"
       }
+    },
+    {
+      "src": "api/index.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/hardban-records-lab.html"
+      "dest": "/index.html"
     }
   ],
-  "env": {
-    "NEXT_PUBLIC_SUPABASE_URL": "https://lniyanikhipfmrdubqvm.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxuaXlhbmlraGlwZm1yZHVicXZtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTc2ODMwMTksImV4cCI6MjA3MzI1OTAxOX0.eCv-tJQ-OT8FRmPYhNtJ1d8NWXBvq-XMQkH_ScsOZ0g",
-    "NEXT_PUBLIC_API_URL": "https://hardbanrecords-backend.onrender.com"
-  },
   "functions": {
-    "hardban-records-lab.tsx": {
-      "includeFiles": "hardban-records-lab.tsx"
+    "api/index.js": {
+      "maxDuration": 30
     }
-  }
-}
+  },
+  "headers": [
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "X-Frame-Options",
           "value": "DENY"
         },
         {
