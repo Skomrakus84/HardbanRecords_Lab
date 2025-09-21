@@ -6,6 +6,7 @@ export interface User {
   first_name?: string;
   last_name?: string;
   role: 'user' | 'artist' | 'label' | 'admin';
+  module_access: 'music' | 'publishing' | 'both';
   is_verified: boolean;
   profile_id?: string;
   created_at: string;

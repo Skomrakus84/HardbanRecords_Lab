@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 import { 
   Home, Music, Disc3, Users, FileText, BookOpen, Book, 
   BarChart3, Globe, Settings, Building2, User, ChevronDown,
-  UserCircle, Shield, LogOut, Bell 
+  UserCircle, Shield, LogOut, Bell, Zap 
 } from 'lucide-react';
+import { useAuthStore } from './store/authStore';
+import { LoginModal } from './components/auth/LoginModal';
 import HomePageNew from './pages/HomePageNewModern';
 import ReleasesPageNew from './pages/music/ReleasesPageNewTest';
 import ArtistsPageNew from './pages/music/ArtistsPageNewModern';
@@ -18,6 +20,8 @@ import BooksPageNew from './pages/publishing/BooksPageNewModern';
 import AddBookPage from './pages/publishing/AddBookPage';
 import ContractsPageNew from './pages/ContractsPageNewModern';
 import SettingsPageNew from './pages/SettingsPageNewModern';
+import IntegrationsPage from './pages/IntegrationsPage';
+import AnalyticsPageUnified from './pages/AnalyticsPageUnified';
 import FloatingActionButton from './components/ui/FloatingActionButton';
 
 const Sidebar: React.FC = () => {
@@ -53,6 +57,7 @@ const Sidebar: React.FC = () => {
     { id: 'books', icon: Book, label: 'Books', path: '/books' },
     { id: 'analytics', icon: BarChart3, label: 'Analytics', path: '/analytics' },
     { id: 'distribution', icon: Globe, label: 'Distribution', path: '/distribution' },
+    { id: 'integrations', icon: Zap, label: 'Integrations', path: '/integrations' },
     { id: 'settings', icon: Settings, label: 'Settings', path: '/settings' }
   ];
 
@@ -175,7 +180,16 @@ const Sidebar: React.FC = () => {
 
 const UserMenu: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
+  
+  const { user, logout, isAuthenticated } = useAuthStore();
+
+  const handleLogin = () => {
+    setShowLoginModal(true);
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -188,13 +202,31 @@ const UserMenu: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const menuItems = [
-    { icon: UserCircle, label: 'Profile', action: () => console.log('Profile clicked') },
-    { icon: Settings, label: 'Settings', action: () => console.log('Settings clicked') },
+  const handleLogout = () => {
+    logout();
+    setIsOpen(false);
+    navigate('/');
+  };
+
+  const handleProfile = () => {
+    navigate('/profile');
+    setIsOpen(false);
+  };
+
+  const handleAdminPanel = () => {
+    navigate('/admin');
+    setIsOpen(false);
+  };
+
+  const menuItems = isAuthenticated && user ? [
+    { icon: UserCircle, label: 'Profile', action: handleProfile },
+    { icon: Settings, label: 'Settings', action: () => navigate('/settings') },
     { icon: Bell, label: 'Notifications', action: () => console.log('Notifications clicked') },
-    { icon: Shield, label: 'Admin Panel', action: () => console.log('Admin clicked') },
+    ...(user?.role === 'admin' ? [{ icon: Shield, label: 'Admin Panel', action: handleAdminPanel }] : []),
     { divider: true },
-    { icon: LogOut, label: 'Logout', action: () => console.log('Logout clicked'), danger: true }
+    { icon: LogOut, label: 'Logout', action: handleLogout, danger: true }
+  ] : [
+    { icon: UserCircle, label: 'Login', action: handleLogin }
   ];
 
   return (
@@ -245,7 +277,7 @@ const UserMenu: React.FC = () => {
           zIndex: 1000
         }}>
           {menuItems.map((item, index) => (
-            item.divider ? (
+            'divider' in item ? (
               <div key={index} style={{ 
                 height: '1px', 
                 background: 'rgba(0, 0, 0, 0.1)', 
@@ -274,12 +306,18 @@ const UserMenu: React.FC = () => {
                   e.currentTarget.style.backgroundColor = 'transparent';
                 }}
               >
-                <item.icon size={16} />
+                {item.icon && <item.icon size={16} />}
                 {item.label}
               </div>
             )
           ))}
         </div>
+      )}
+      {showLoginModal && (
+        <LoginModal 
+          isOpen={showLoginModal}
+          onClose={() => setShowLoginModal(false)}
+        />
       )}
     </div>
   );
@@ -358,6 +396,8 @@ const MainContent: React.FC = () => {
         return 'Analytics';
       case '/distribution':
         return 'Distribution';
+      case '/integrations':
+        return 'Integrations';
       case '/settings':
         return 'Settings';
       default:
@@ -387,8 +427,9 @@ const MainContent: React.FC = () => {
           <Route path="/publishing/*" element={<PublishingDashboard />} />
           <Route path="/books" element={<BooksPageNew />} />
           <Route path="/books/new" element={<AddBookPage />} />
-          <Route path="/analytics" element={<AnalyticsPageNew />} />
+          <Route path="/analytics" element={<AnalyticsPageUnified />} />
           <Route path="/distribution" element={<DistributionPageNew />} />
+          <Route path="/integrations" element={<IntegrationsPage />} />
           <Route path="/settings" element={<SettingsPageNew />} />
         </Routes>
       </div>
